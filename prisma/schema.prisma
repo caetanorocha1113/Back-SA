@@ -8,9 +8,28 @@ datasource db {
 }
 
 model Usuario {
-  id String @id  @default(uuid())
-  nome String
-  email String  @unique
-  senha String? 
-  refreshToken String? 
+  id           String      @id @default(uuid())
+  nome         String
+  email        String      @unique
+  senha        String?
+  perfil       String      @default("usuario")
+  refreshToken String?
+  transacoes   Transacao[]
+}
+
+model Transacao {
+  id        Int      @id @default(autoincrement())
+  usuarioId String
+  descricao String
+  valor     Decimal  @db.Decimal(12, 2)
+  tipo      String
+  categoria String
+  data      DateTime @db.Date
+  status    String   @default("concluida")
+  criadoEm  DateTime @default(now())
+  usuario   Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@index([usuarioId, data])
+  @@index([usuarioId, tipo, data])
+  @@index([usuarioId, categoria])
 }

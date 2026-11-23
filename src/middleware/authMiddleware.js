@@ -23,8 +23,18 @@ export function verificarToken(req, res, next) {
   try {
     const dadosDecodificados = jwt.verify(partes[1], ACCESS_SECRET);
     req.usuarioLogadoId = dadosDecodificados.id;
+    req.usuarioLogadoPerfil = dadosDecodificados.perfil;
     return next();
   } catch (error) {
     return res.status(401).json({ erro: "Token inválido ou expirado." });
   }
+}
+
+export function permitirPerfis(...perfis) {
+  return (req, res, next) => {
+    if (!perfis.includes(req.usuarioLogadoPerfil)) {
+      return res.status(403).json({ erro: "Você não tem permissão para acessar este recurso." });
+    }
+    return next();
+  };
 }

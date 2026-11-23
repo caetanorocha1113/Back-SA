@@ -1,0 +1,75 @@
+@url = http://localhost:3000
+@token = cole-aqui-o-accessToken-do-login
+
+### Login
+POST {{url}}/login
+Content-Type: application/json
+
+{ "email": "nicole@email.com", "senha": "123467" }
+
+### Login com senha errada
+POST {{url}}/login
+Content-Type: application/json
+
+{ "email": "nicole@email.com", "senha": "errada" }
+
+### Cadastro
+POST {{url}}/usuarios
+Content-Type: application/json
+
+{ "nome": "Caetano", "email": "caetano@email.com", "senha": "123456" }
+
+### Perfil do usuário logado
+GET {{url}}/perfil
+Authorization: Bearer {{token}}
+
+### Sem token (401)
+GET {{url}}/transacoes
+
+### Listar usuários sendo usuário comum (403)
+GET {{url}}/usuarios
+Authorization: Bearer {{token}}
+
+### Transações com filtros e paginação
+GET {{url}}/transacoes?busca=mercado&tipo=despesa&pagina=1&limite=5
+Authorization: Bearer {{token}}
+
+### Criar transação
+POST {{url}}/transacoes
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "descricao": "Pizza", "valor": 89.90, "tipo": "despesa", "categoria": "Alimentação", "data": "2026-11-22", "status": "pendente" }
+
+### Criar transação inválida (400)
+POST {{url}}/transacoes
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "descricao": "", "valor": -5, "tipo": "despesa", "categoria": "Salário", "data": "2026-11-22" }
+
+### Atualizar transação (troque o id)
+PUT {{url}}/transacoes/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "descricao": "Pizza com amigos", "valor": 95.50, "tipo": "despesa", "categoria": "Lazer", "data": "2026-11-22", "status": "concluida" }
+
+### Excluir transação (troque o id)
+DELETE {{url}}/transacoes/1
+Authorization: Bearer {{token}}
+
+### Dashboard
+GET {{url}}/dashboard?periodo=6m
+Authorization: Bearer {{token}}
+
+### Relatório do período
+GET {{url}}/relatorios?dataInicio=2026-01-01&dataFim=2026-11-30
+Authorization: Bearer {{token}}
+
+### Relatório em CSV
+GET {{url}}/relatorios?dataInicio=2026-11-01&dataFim=2026-11-30&formato=csv
+Authorization: Bearer {{token}}
+
+### Rota que não existe (404)
+GET {{url}}/nada
